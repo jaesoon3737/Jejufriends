@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="jejufriends.community.repository.CommunityRepository">
+	<select id="selectListAll" resultType="Community">
+		select COMNUM, EMAIL, NICK, COMSUBJECT, COMCONTENT, KATEGORIE, COMTAG, COMPHOTO, COMORIPHOTO, views, 
+		love, to_char(COMDATE, 'YYYY-MM-DD') as COMDATE, to_char(COMUPDATE, 'YYYY-MM-DD') as COMUPDATE 
+		from COMMUNITY order by COMNUM desc
+	</select>
+	
+	
+	<insert id="insertCommunity" parameterType="Community">
+		insert into COMMUNITY values(
+			COMMUNITY_SEQ.nextval,
+			#{email},
+			#{nick}, 
+			#{comsubject},
+			#{comcontent}, 
+			#{kategorie}, 
+			#{comtag}, 
+			#{comphoto}, 
+			#{comoriphoto},
+			0,
+			0,
+			SYSDATE,
+			SYSDATE,
+			#{division}
+			)
+	</insert>
+	
+	
+	<select id="selectNick" parameterType="String" resultType="String">
+		select NICKNAME from MEMBER where EMAIL = #{email}
+	</select>
+	
+	
+	<select id="selectContent" parameterType="long" resultType="Community">
+		select COMNUM, EMAIL, NICK, COMSUBJECT, COMCONTENT, KATEGORIE, COMTAG, COMPHOTO, COMORIPHOTO, views, 
+		love, to_char(COMDATE, 'YYYY-MM-DD') as COMDATE, to_char(COMUPDATE, 'YYYY-MM-DD') as COMUPDATE
+		from COMMUNITY where COMNUM = #{comnum}
+	</select>
+	
+	
+	<select id="selectSearch" parameterType="CommunitySearch" resultType="Community">
+		select COMNUM, EMAIL, NICK, COMSUBJECT, COMCONTENT, KATEGORIE, COMTAG, COMPHOTO, COMORIPHOTO, views, 
+		love, to_char(COMDATE, 'YYYY-MM-DD') as COMDATE, to_char(COMUPDATE, 'YYYY-MM-DD') as COMUPDATE
+		from COMMUNITY where ${column} like '%'||#{keyword}||'%' order by COMNUM desc
+	</select>
+	
+	
+	<delete id="deleteContent" parameterType="long">
+		delete from COMMUNITY where COMNUM = #{comnum}
+	</delete>
+	
+	
+	<update id="updateContent" parameterType="Community">
+		update COMMUNITY set COMSUBJECT = #{comsubject}, COMCONTENT = #{comcontent}, COMTAG = #{comtag}, KATEGORIE = #{kategorie}, 
+		DIVISION = #{division}, COMPHOTO = #{comphoto}, COMORIPHOTO = #{comoriphoto}, COMUPDATE = SYSDATE
+		where COMNUM = #{comnum}
+	</update>
+	
+	
+	<select id="selectViews" parameterType="long" resultType="Long">
+		select VIEWS from COMMUNITY where COMNUM = #{comnum}
+	</select> 
+	
+	
+	<update id="updateViews" parameterType="Community">
+		update COMMUNITY set VIEWS = #{views} where COMNUM = #{comnum}
+	</update> 
+</mapper>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="soo.md.mapper.LandmarkMapper">
+	<select id="selectPerPage" resultType="Landmark" parameterType="LandmarkVo">
+	     <![CDATA[
+	     select * from (select ROWNUM rnum, aa.* from (select * from LANDMARK order by LNUM desc) aa)
+	     where rnum>#{startRow} and rnum<=#{endRow}
+	     ]]>
+	</select>
+	<select id="selectSearchSubject" resultType="Landmark" parameterType="LandmarkVo">
+		<![CDATA[
+		select * from (select ROWNUM rnum, aa.* from (select * from Landmark WHERE LNAME like '%'||#{surf}||'%' order by LNUM desc) aa) where lnum>#{startRow} and lnum<=#{endRow}  
+		]]>
+ 	</select>
+ 	<select id="selectSearchContent" resultType="Landmark" parameterType="LandmarkVo">
+ 		<![CDATA[
+ 		select * from (select ROWNUM lnum, aa.* from (select * from Landmark WHERE AINTRO like '%'||#{surf}||'%' order by ANUM desc) aa) where rnum>#{startRow} and rnum<=#{endRow}  
+ 		]]>
+ 	</select>
+	<select id="selectBySeq" resultType="Landmark" parameterType="long">
+	     select * from Landmark where LNUM=#{lnum} 
+	</select>
+	<select id="selectCount" resultType="long">
+	     select max(ROWNUM) from LANDMARK
+	</select>
+	<select id="searchSelectSubjectCount" resultType="Integer">
+ 		select max(ROWNUM) from Landmark where LNAME like '%'||#{surf}||'%'
+ 	</select>
+ 	<select id="searchSelectContentCount" resultType="Integer">
+ 		select max(ROWNUM) from Landmark where LINTRO like '%'||#{surf}||'%' 
+ 	</select>
+ 	<select id="list" resultType="Landmark">
+ 		select * from Landmark order by LNUM desc
+ 	</select>
+ 	<update id="views" parameterType="long">
+		update Landmark set VIEWS = (SELECT (SELECT VIEWS FROM LANDMARK WHERE LNUM = #{lnum}) + 1 FROM dual) WHERE LNUM = #{lnum}
+	</update>
+	<select id="selectBySubject" resultType="Landmark" parameterType="String">
+ 		select lname from Landmark where lname like '%'||#{surf}||'%' group by LNAME order by LNAME
+ 	</select>
+ 	<select id="selectByContent" resultType="Landmark" parameterType="String">
+ 		select lintro from Landmark where lintro like '%'||#{surf}||'%' group by LINTRO order by LINTRO
+ 	</select>
+ 	<insert id="insert" parameterType="LandmarkreviewVo">
+ 		insert into LandmarkREVIEW values(#{lnum}, LRNUM_SEQ.nextval, #{writer}, SYSDATE, #{content})
+ 	</insert>
+ 	 <select id="select" resultType="LandmarkreviewVo" parameterType="long">
+ 		select * from LANDMARKREVIEW where lnum = #{lnum}
+ 	</select>
+ 	 <delete id="delete" parameterType="LandmarkreviewVo">
+ 	 	delete from LANDMARKREVIEW where lrnum=#{lrnum}
+ 	</delete>
+ 	
+ 	<select id="selectNick" parameterType="String" resultType="String">
+		select NICKNAME from MEMBER where EMAIL = #{email}
+	</select>
+</mapper>

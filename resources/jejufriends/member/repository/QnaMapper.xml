@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <mapper namespace="jejufriends.member.repository.QnaMapper">
+ 	<select id="selectPerPage" resultType="Qna" parameterType="QnaVo">
+ 		<![CDATA[
+ 		SELECT * FROM (select ROWNUM rno, bb.* from (select ROWNUM rnum, aa.* from (select * from QNA ORDER BY originNo ASC, groupOrd DESC) aa ORDER BY rnum DESC) bb ORDER BY rno ASC) where rno>#{startRow} and rno<=#{endRow}
+ 		]]>
+ 	</select>
+ 	<select id="selectSearchSubject" resultType="Qna" parameterType="QnaVo">
+ 		<![CDATA[
+ 		select * from (select ROWNUM rnum, aa.* from (select * from QNA WHERE SUBJECT like '%'||#{surf}||'%' ORDER BY originNo ASC, groupOrd DESC) aa) where rnum>#{startRow} and rnum<=#{endRow}  
+ 		
+ 		]]>
+ 	</select>
+ 	<select id="selectSearchContent" resultType="Qna" parameterType="QnaVo">
+ 		<![CDATA[
+ 		select * from (select ROWNUM rnum, aa.* from (select * from QNA WHERE CONTENT like '%'||#{surf}||'%' ORDER BY originNo ASC, groupOrd DESC) aa) where rnum>#{startRow} and rnum<=#{endRow}  
+ 		]]>
+ 	</select>
+ 	<select id="selectBySeq" resultType="Qna" parameterType="long">
+ 		select * from QNA where SEQ=#{seq}
+ 	</select> 
+ 	<select id="selectCount" resultType="Integer">
+ 		select max(ROWNUM) from QNA
+ 	</select>
+ 	<select id="searchSelectSubjectCount" resultType="Integer">
+ 		select max(ROWNUM) from QNA where SUBJECT like '%'||#{subject}||'%' 
+ 	</select>
+ 	<select id="searchSelectContentCount" resultType="Integer">
+ 		select max(ROWNUM) from QNA where CONTENT like '%'||#{subject}||'%' 
+ 	</select>
+ 	<select id="list" resultType="Qna">
+ 		select * from QNA order by SEQ desc
+ 	</select>
+ 	<insert id="insert" parameterType="Qna">
+		insert into QNA values(qna_seq.nextval, #{writer}, #{email}, #{subject}, #{content}, SYSDATE,(SELECT LAST_NUMBER  FROM USER_SEQUENCES WHERE SEQUENCE_NAME = 'QNA_SEQ'),0,0,#{writerEmail})
+ 	</insert>
+ 	<update id="update" parameterType="Qna">
+ 		update QNA set subject=#{subject}, content=#{content} where seq=#{seq}
+ 	</update>
+ 	<update id="hits" parameterType="long">
+ 		update QNA set HITS = (SELECT (SELECT HITS FROM QNA WHERE SEQ = #{seq}) + 1 FROM dual) WHERE SEQ = #{seq}
+ 	</update>
+ 	<delete id="delete" parameterType="long">
+ 	 	delete from QNA where SEQ=#{seq}
+ 	</delete>
+ 	<insert id="reply" parameterType="Qna">
+		insert into QNA values(qna_seq.nextval, #{writer}, #{email}, #{subject}, #{content}, SYSDATE, #{seq}, #{groupOrd}, 0, #{writerEmail})
+ 	</insert>
+ 	<select id="getGroupOrd" resultType="int" parameterType="long">
+ 		SELECT groupOrd FROM QNA WHERE seq = #{seq} AND ROWNUM = 1 ORDER BY groupOrd DESC
+ 	</select>
+ 	<select id="selectBySubject" resultType="Faq" parameterType="String">
+ 		select subject from QNA where SUBJECT like '%'||#{surf}||'%' group by SUBJECT order by SUBJECT
+ 	</select>
+ 	<select id="selectByContent" resultType="Faq" parameterType="String">
+ 		select content from QNA where CONTENT like '%'||#{surf}||'%' group by CONTENT order by CONTENT
+ 	</select>
+ </mapper>

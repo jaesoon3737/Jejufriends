@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="soo.md.mapper.FoodMapper">
+	<select id="selectPerPage" resultType="Food" parameterType="FoodVo">
+	     <![CDATA[
+	     select * from (select ROWNUM rnum, aa.* from (select * from FOOD order by FNUM desc) aa)
+	     where rnum>#{startRow} and rnum<=#{endRow}
+	     ]]>
+	</select>
+ 	<select id="selectSearchSubject" resultType="Food" parameterType="FoodVo">
+		<![CDATA[
+		select * from (select ROWNUM rnum, aa.* from (select * from Food WHERE FNAME like '%'||#{surf}||'%' order by FNUM desc) aa) where rnum>#{startRow} and rnum<=#{endRow}  
+		]]>
+ 	</select>
+ 	<select id="selectSearchContent" resultType="Food" parameterType="FoodVo">
+ 		<![CDATA[
+ 		select * from (select ROWNUM rnum, aa.* from (select * from FOOD WHERE FINTRO like '%'||#{surf}||'%' order by FNUM desc) aa) where rnum>#{startRow} and rnum<=#{endRow}  
+ 		]]>
+ 	</select>
+	<select id="selectBySeq" resultType="Food" parameterType="long">
+	     select * from Food where FNUM=#{fnum} 
+	</select>
+	<select id="selectCount" resultType="long">
+	     select max(ROWNUM) from FOOD
+	</select>
+ 	<select id="searchSelectSubjectCount" resultType="Integer">
+ 		select max(ROWNUM) from FOOD where FNAME like '%'||#{surf}||'%'
+ 	</select>
+ 	<select id="searchSelectContentCount" resultType="Integer">
+ 		select max(ROWNUM) from FOOD where FINTRO like '%'||#{surf}||'%' 
+ 	</select>
+ 	<select id="list" resultType="Food">
+ 		select * from FOOD order by FNUM desc
+ 	</select>
+ 	<update id="views" parameterType="long">
+		update FOOD set VIEWS = (SELECT (SELECT VIEWS FROM FOOD WHERE FNUM = #{fnum}) + 1 FROM dual) WHERE FNUM = #{fnum}
+	</update>
+ 	<select id="selectBySubject" resultType="Food" parameterType="String">
+ 		select fname from FOOD where fname like '%'||#{surf}||'%' group by FNAME order by FNAME
+ 	</select>
+ 	<select id="selectByContent" resultType="Food" parameterType="String">
+ 		select fintro from FOOD where fintro like '%'||#{surf}||'%' group by FINTRO order by FINTRO
+ 	</select>
+ 	<insert id="insert" parameterType="reviewVo">
+ 		insert into FOODREVIEW values(#{fnum}, FRNUM_SEQ.nextval, #{writer}, SYSDATE, #{content})
+ 	</insert>
+ 	 <select id="select" resultType="reviewVo" parameterType="long">
+ 		select * from FOODREVIEW where fnum = #{fnum}
+ 	</select>
+ 	 <delete id="delete" parameterType="reviewVo">
+ 	 	delete from FOODREVIEW where frnum=#{frnum}
+ 	</delete>
+ 	
+ 	<select id="selectNick" parameterType="String" resultType="String">
+		select NICKNAME from MEMBER where EMAIL = #{email}
+	</select>
+</mapper>
