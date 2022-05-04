@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <mapper namespace="jejufriends.member.repository.FaqMapper">
+ 	<select id="selectPerPage" resultType="Faq" parameterType="FaqVo">
+ 		<![CDATA[
+ 		select * from(select ROWNUM rno, bb.* from (select ROWNUM rnum, aa.* from (select * from FAQ order by SEQ asc) aa ORDER BY rnum DESC) bb ORDER BY rno ASC) where rno>#{startRow} and rno<=#{endRow}
+ 		]]>
+ 	</select>
+ 	<select id="selectSearchSubject" resultType="Faq" parameterType="FaqVo">
+ 		<![CDATA[
+ 		select * from (select ROWNUM rnum, aa.* from (select * from FAQ WHERE SUBJECT like '%'||#{surf}||'%' order by SEQ desc) aa) where rnum>#{startRow} and rnum<=#{endRow}  
+ 		]]>
+ 	</select>
+ 	<select id="selectSearchContent" resultType="Faq" parameterType="FaqVo">
+ 		<![CDATA[
+ 		select * from (select ROWNUM rnum, aa.* from (select * from FAQ WHERE CONTENT like '%'||#{surf}||'%' order by SEQ desc) aa) where rnum>#{startRow} and rnum<=#{endRow}  
+ 		]]>
+ 	</select>
+ 	<select id="selectBySeq" resultType="Faq" parameterType="long">
+ 		select * from FAQ where SEQ=#{seq}
+ 	</select> 
+ 	<select id="selectCount" resultType="Integer">
+ 		select max(ROWNUM) from FAQ
+ 	</select>
+ 	<select id="searchSelectSubjectCount" resultType="Integer">
+ 		select max(ROWNUM) from FAQ where SUBJECT like '%'||#{surf}||'%'  
+ 	</select>
+ 	<select id="searchSelectContentCount" resultType="Integer">
+ 		select max(ROWNUM) from FAQ where CONTENT like '%'||#{surf}||'%' 
+ 	</select>
+ 	<select id="list" resultType="Faq">
+ 		select * from FAQ order by SEQ desc
+ 	</select>
+ 	<insert id="insert" parameterType="Faq">
+ 		insert into FAQ(WRITER, SUBJECT, CONTENT, RDATE, SEQ, HITS) values('admin', #{subject}, #{content}, SYSDATE, FAQ_SEQ.nextval, 0)
+	
+ 	</insert>
+ 	<update id="update" parameterType="Faq">
+ 		update FAQ set subject=#{subject}, content=#{content} where seq=#{seq}
+ 	</update>
+ 	<update id="hits" parameterType="long">
+ 		update FAQ set HITS = (SELECT (SELECT HITS FROM FAQ WHERE SEQ = #{seq}) + 1 FROM dual) WHERE SEQ = #{seq}
+		
+ 	</update>
+ 	<delete id="delete" parameterType="long">
+ 	 	delete from FAQ where SEQ=#{seq}
+ 	</delete>
+ 	<select id="selectBySubject" resultType="Faq" parameterType="String">
+ 		select subject from FAQ where SUBJECT like '%'||#{surf}||'%' group by SUBJECT order by SUBJECT
+ 	</select>
+ 	<select id="selectByContent" resultType="Faq" parameterType="String">
+ 		select content from FAQ where CONTENT like '%'||#{surf}||'%' group by CONTENT order by CONTENT
+ 	</select>
+ </mapper>

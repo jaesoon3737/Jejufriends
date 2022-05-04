@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="jejufriends.member.repository.KaKaoLoginRepository">
+
+	<select id="kakaoTalkIdExistCheck" parameterType="KakaoMember" resultType="Integer" >
+		select count(*) from member where email = #{username}
+	</select>
+	
+	<insert id="addMemberForKAKAO"  parameterType="KakaoMember">
+		insert into member values(MEMBER_SEQ.nextval, #{username} , #{password} ,  #{nickName} ,  #{name} ,  null ,  null ,  null   , 1 , 0 , #{checkSnsId})
+	</insert>
+	
+</mapper>

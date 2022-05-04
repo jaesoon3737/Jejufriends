@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<typeAliases>  
+		<typeAlias alias="Member" type="jejufriends.member.domain.Member"/>
+		<typeAlias alias="KakaoMember" type="jejufriends.member.domain.KakaoMember"/>
+		<typeAlias alias="LoginMember" type="jejufriends.member.domain.LoginMember"/>
+		<typeAlias alias="Taboo" type="jejufriends.member.domain.TabooWord"/>
+		<typeAlias alias="ForgetMember" type="jejufriends.member.domain.ForgetMember"/>
+		<typeAlias alias="AdminUserInfo" type="jejufriends.member.domain.AdminUserInfo"/>
+		<typeAlias alias="UserInfoChange" type="jejufriends.member.domain.UserInfoChange"/>
+		<typeAlias alias="Paging" type="jejufriends.member.domain.Paging"/>
+		<typeAlias alias="PagingKeyword" type="jejufriends.member.domain.PagingKeyword"/>
+		<typeAlias alias="TabooContainsMember" type="jejufriends.member.domain.TabooContainsMember"/>
+		<typeAlias alias="AdminMemberInfoChange" type="jejufriends.member.domain.AdminMemberInfoChange"/>
+		<typeAlias alias="TodoList" type="jejufriends.member.domain.TodoList"/>
+		<typeAlias alias="WithDrawMember" type="jejufriends.member.domain.WithDrawMember"/>
+		<typeAlias alias="WithDrawMemberClear" type="jejufriends.member.domain.WithDrawMemberClear"/>
+		
+		<!-- content -->
+		<typeAlias alias="ContentInsertVO" type="jejufriends.content.domain.ContentInsertVO"/>
+		
+		<!--  course -->
+		<typeAlias alias="MakeCourse" type="jejufriends.course.make.domain.MakeCourse"/>
+	    <typeAlias alias="SaveCourse" type="jejufriends.course.make.domain.SaveCourse"/>
+	    <typeAlias alias="SaveCourseContent" type="jejufriends.course.make.domain.SaveCourseContent"/>
+	    <typeAlias alias="Course" type="jejufriends.course.domain.Course"/>
+	    <typeAlias alias="CourseContent" type="jejufriends.course.domain.CourseContent"/>
+	    <typeAlias alias="SelectCourseDivision" type="jejufriends.course.select.domain.SelectCourseDivision"/>
+	    <typeAlias alias="SelectCourseSearch" type="jejufriends.course.select.domain.SelectCourseSearch"/>
+	    <typeAlias alias="CourseHotel" type="jejufriends.course.domain.CourseHotel"/>
+	    <typeAlias alias="CourseActivity" type="jejufriends.course.domain.CourseActivity"/>
+	    <typeAlias alias="CourseFood" type="jejufriends.course.domain.CourseFood"/>
+	    <typeAlias alias="CourseLandMark" type="jejufriends.course.domain.CourseLandMark"/>
+	    <typeAlias alias="Community" type="jejufriends.community.domain.Community"/>
+      	<typeAlias alias="CommunitySearch" type="jejufriends.community.domain.CommunitySearch"/>   
+      	
+      	<!-- content -->
+     	<typeAlias alias="Food" type="soo.md.domain.Food"/>
+	    <typeAlias alias="FoodVo" type="soo.md.domain.FoodVo"/>
+	    <typeAlias alias="Landmark" type="soo.md.domain.Landmark"/>
+	    <typeAlias alias="LandmarkVo" type="soo.md.domain.LandmarkVo"/>
+	    <typeAlias alias="Activity" type="soo.md.domain.Activity"/>
+	    <typeAlias alias="ActivityVo" type="soo.md.domain.ActivityVo"/>
+	    <typeAlias alias="Hotel" type="soo.md.domain.Hotel"/>
+	    <typeAlias alias="HotelVo" type="soo.md.domain.HotelVo"/>
+	    <typeAlias alias="reviewVo" type="soo.md.domain.reviewVo"/>
+	    <typeAlias alias="ActivityreviewVo" type="soo.md.domain.ActivityreviewVo"/>
+	    <typeAlias alias="LandmarkreviewVo" type="soo.md.domain.LandmarkreviewVo"/>
+	    <typeAlias alias="HotelreviewVo" type="soo.md.domain.HotelreviewVo"/>
+      	
+      	<typeAlias alias="WishList" type="jejufriends.course.domain.WishList"/>
+		<!-- QnA -->
+		
+		<typeAlias alias="Qna" type="jejufriends.member.domain.Qna"/>
+		<typeAlias alias="QnaVo" type="jejufriends.member.domain.QnaVo"/>
+		<typeAlias alias="Faq" type="jejufriends.member.domain.Faq"/>
+		<typeAlias alias="FaqVo" type="jejufriends.member.domain.FaqVo"/>
+		
+		
+	</typeAliases>
+	<mappers>     
+		 <mapper resource="/jejufriends/member/repository/SuspendMapper.xml"/>
+		 <mapper resource="/jejufriends/member/repository/TabooMapper.xml"/>
+	 	 <mapper resource="/jejufriends/member/repository/MyPageMapper.xml"/>
+	     <mapper resource="/jejufriends/member/repository/LoginMapper.xml"/>
+	     <mapper resource="/jejufriends/member/repository/AdminMapper.xml"/>
+	     <mapper resource="/jejufriends/member/repository/signMemberMapper.xml"/>
+	     <mapper resource="/jejufriends/member/repository/KakaoMemberMapper.xml"/>
+	     <mapper resource="/jejufriends/member/repository/ForgetPasswordMapper.xml"/>
+	     <mapper resource="/jejufriends/member/repository/WithDrawDeleteUserRepository.xml"/>
+	     <!-- content -->
+	      <mapper resource="/jejufriends/content/repository/contentInsertRepository.xml"/>
+	     <!-- Qna -->
+	     
+	     <mapper resource="/jejufriends/member/repository/QnaMapper.xml"/>
+	     <mapper resource="/jejufriends/member/repository/FaqMapper.xml"/>
+	</mappers>
+</configuration>

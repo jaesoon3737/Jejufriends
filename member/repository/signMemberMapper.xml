@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="jejufriends.member.repository.SignUpMemberRepository">
+
+	<insert id="addMember"  parameterType="Member">
+		insert into member values(MEMBER_SEQ.nextval, #{email} , #{pwd} ,  #{nickName} , #{name} ,  #{birth} ,  #{phoneNumber} ,  #{gender}   , 1 , 0 , default )
+	</insert>
+	
+	<select id="emailCheckSelect" parameterType="String" resultType="String" >
+		select email from member where email = #{emailCheck}
+	</select>
+	
+	<select id="signEmailCheckSelect" parameterType="String" resultType="Integer" >
+		select count(*) from member where email = #{emailCheck}
+	</select>
+	
+	<select id="tabooNickNameCheckSelect"  resultType="Taboo" >
+		select TABOOWORDNUMBER , TABOOWORDCHECK  from TABOOWORD 
+	</select>
+	
+	<select id="nickNameCheckSelect" parameterType="String" resultType="String" >
+		select nickname from member where nickname = #{nickNameCheck} 
+	</select>
+ 
+	<select id="signNickNameCheckSelect" parameterType="String" resultType="Integer" >
+		select count(*) from member where nickname = #{nickNameCheck} 
+	</select>
+</mapper>

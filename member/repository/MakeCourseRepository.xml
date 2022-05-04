@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="jejufriends.course.make.repository.MakeCourseRepository">
+	<select id="selectHotelAll" resultType="Hotel">
+		select * from HOTEL
+	</select>
+	<select id="selectActivityAll" resultType="Activity">
+		select * from ACTIVITY
+	</select>
+	<select id="selectFoodAll" resultType="Food">
+		select * from FOOD
+	</select>
+	<select id="selectLandmarkAll" resultType="LandMark">
+		select * from LANDMARK
+	</select>
+	
+	
+	<select id="selectHotelLocation" resultType="Hotel">
+		select * from HOTEL where XLOCATION = '0' or YLOCATION = '0'
+	</select>
+	<select id="selectActivityLocation" resultType="Activity">
+		select * from ACTIVITY where XLOCATION = '0' or YLOCATION = '0'
+	</select>
+	<select id="selectFoodLocation" resultType="Food">
+		select * from FOOD where XLOCATION = '0' or YLOCATION = '0'
+	</select>
+	<select id="selectLandmarkLocation" resultType="LandMark">
+		select * from LANDMARK where XLOCATION = '0' or YLOCATION = '0'
+	</select>
+	
+	
+	<select id="selectHotelSearch" parameterType="String" resultType="Hotel">
+		select * from HOTEL where hname like '%'||#{keyword}||'%'
+	</select>
+	<select id="selectActivitySearch" parameterType="String" resultType="Activity">
+		select * from ACTIVITY where aname like '%'||#{keyword}||'%'
+	</select>
+	<select id="selectFoodSearch" parameterType="String" resultType="Food">
+		select * from FOOD where fname like '%'||#{keyword}||'%'
+	</select>
+	<select id="selectLandmarkSearch" parameterType="String" resultType="LandMark">
+		select * from LANDMARK where lname like '%'||#{keyword}||'%'
+	</select>
+	
+	
+	<insert id="insertCourse" parameterType="Course">
+		insert into COURSE values(
+			COURSE_SEQ.nextval, 
+			#{nick}, 
+			#{cname}, 
+			#{cintro}, 
+			#{ctag}, 
+			0, 
+			#{ccost}, 
+			0, 
+			0,
+			#{division}, 
+			to_date(#{startdate}, 'YYYY-MM-DD'),
+			to_date(#{lastdate}, 'YYYY-MM-DD'),
+			SYSDATE
+			)
+	</insert>
+	<insert id="insertCourseContent" parameterType="CourseContent">
+		insert into ${contenttype} values(CH_SEQ.nextval, #{contentname}, #{cday}, #{corder}, #{cnum})
+	</insert>
+	
+	
+	<select id="selectCourseNum" parameterType="String" resultType="Long">
+		select CNUM from COURSE where CNAME=#{cname}
+	</select>
+	
+	<select id="selectCourseName" parameterType="String" resultType="String">
+		select CNAME from COURSE where CNAME = #{cname}
+	</select>
+	
+	<select id="selectFood" parameterType="String" resultType="Food">
+		select * from FOOD where FNAME = #{fname}
+	</select>
+	
+</mapper>
