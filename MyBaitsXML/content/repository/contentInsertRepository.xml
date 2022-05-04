@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="jejufriends.content.repository.ContentInsertRepository">
+	
+	<insert id="foodContentInsert" parameterType="ContentInsertVO">
+		insert into FOOD values ( FOOD_SEQ.nextval , #{name} ,#{bigIntro} ,#{smallIntro} ,
+			 	<choose>
+			 		<when test="menu1 == null || menu2 == null || menu3 == null">
+						  <choose>
+							<when test="oriPhoto == null">
+								 ' ' ,' ' , ' ' , 0 , 0 , 0 , #{address} ,#{phone} ,#{opcl}
+								  ,#{breakTime} , default  , #{photo1} , #{photo2}  , #{photo3} , ' '
+								  ,0 , '0' , 1 , 0 , #{division} , '0' , '0')
+							</when>
+							<otherwise>
+								 ' ' ,' ' , ' ' , 0 , 0 , 0 , #{address} ,#{phone} ,#{opcl}
+						 		 ,#{breakTime} , default  , #{photo1} , #{photo2}  , #{photo3} , #{oriPhoto} 
+						 		 ,0 , '0' , 1 , 0 , #{division} , '0' , '0')
+							</otherwise>
+					   </choose>
+					</when>
+					<when test="menu1 != null || menu2 == null || menu3 == null">
+						<choose>
+							<when test="oriPhoto == null">
+								 #{menu1} ,#{cost1} , ' ' , 0 , ' ' , 0 , #{address} ,#{phone} ,#{opcl}
+								  ,#{breakTime} ,default  , #{photo1} , #{photo2}  , #{photo3} , ' '
+								  , 0, '0' , 1 , 0 , #{division} , '0' , '0')
+							</when>
+							<otherwise>
+								 #{menu1} ,#{cost1} , ' ' , 0 , ' ' , 0 , #{address} ,#{phone} ,#{opcl}
+							    ,#{breakTime} , default  , #{photo1} , #{photo2}  , #{photo3} , #{oriPhoto} 
+							    , 0, '0' , 1 , 0 , #{division} , '0' , '0')
+							</otherwise>
+					   </choose>
+					</when>
+					<when test="menu1 != null || menu2 != null || menu3 == null">
+						<choose>
+							<when test="oriPhoto == null">
+								 #{menu1} ,#{cost1} ,#{menu2} ,#{cost2} , ' ' , 0 , #{address} ,#{phone} ,#{opcl}
+								  ,#{breakTime} , default  , #{photo1} , #{photo2}  , #{photo3} , ' '
+								  , 0, '0' , 1 , 0 , #{division} , '0' , '0')
+							</when>
+							<otherwise>
+								 #{menu1} ,#{cost1} ,#{menu2} ,#{cost2} , ' ' , 0 , #{address} ,#{phone} ,#{opcl}
+							    ,#{breakTime} , default  , #{photo1} , #{photo2}  , #{photo3} , #{oriPhoto} 
+							    , 0, '0' , 1 , 0 , #{division} , '0' , '0')
+							</otherwise>	  
+						</choose>
+					</when>
+					<when test="menu1 != null || menu2 != null || menu3 != null">
+						<choose>
+							<when test="oriPhoto == null">
+								 #{menu1} ,#{cost1} ,#{menu2} ,#{cost2} ,#{menu3} ,#{cost3} ,#{address} ,#{phone} ,#{opcl}
+								  ,#{breakTime} , default , #{photo1} , #{photo2}  , #{photo3} , ' ' 
+								  , 0 , '0' , 1 , 0 , #{division} , '0' , '0')
+							</when>
+							<otherwise>
+								 #{menu1} ,#{cost1} ,#{menu2} ,#{cost2} ,#{menu3} ,#{cost3} ,#{address} ,#{phone} ,#{opcl}
+								  ,#{breakTime} , default , #{photo1} , #{photo2}  , #{photo3} , #{oriPhoto}  
+								  , 0 , '0' , 1 , 0 , #{division} , '0' , '0')
+							</otherwise>	  
+						</choose>
+					</when>
+		
+				</choose> 
+	</insert>
+	
+	
+	<insert id="hotelContentInsert" parameterType="ContentInsertVO">
+		insert into HOTEL values ( HOTEL_SEQ.nextval , #{name} ,#{bigIntro} ,#{smallIntro} , #{cost1}
+			, #{address} , #{phone} , #{opcl} , #{breakTime} , default  , #{photo1} , #{photo2}  , #{photo3} , #{oriPhoto} 
+			, 0 , '0' , 1 , 0 , #{division} , '0' , '0')
+	</insert>
+	
+	
+	<insert id="activityContentInsert" parameterType="ContentInsertVO">
+		insert into ACTIVITY values ( ACTIVITY_SEQ.nextval , #{name} ,#{bigIntro} ,#{smallIntro} , #{cost1}
+			, #{address} , #{phone} , #{opcl} , #{breakTime} , default , #{photo1} , #{photo2}  , #{photo3} , #{oriPhoto} 
+			, 0 , '0' , 1 , 0 , #{division} , '0' , '0')
+	</insert>
+	
+	<insert id="landmarkContentInsert" parameterType="ContentInsertVO">
+		insert into LANDMARK values ( LANDMARK_SEQ.nextval , #{name} ,#{bigIntro} ,#{smallIntro} , #{cost1}
+			, #{address} , #{phone} , #{opcl} , default , #{photo1} , #{photo2}  , #{photo3} , #{oriPhoto} 
+			, 0, '0' , 1 , 0 , #{division} , '0' , '0')
+	</insert>
+	
+
+	<select id="contentSelect" parameterType="String" resultType="String">
+		select fname from food union select hname from hotel union select aname from activity union select lname from landmark
+	</select>
+</mapper>

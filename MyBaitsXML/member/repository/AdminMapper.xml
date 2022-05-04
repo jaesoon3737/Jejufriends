@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="jejufriends.member.repository.AdminRepository">
+   <select id="memberfindAll" parameterType="Paging" resultType="AdminUserInfo" >
+	select * from 
+			( select ROWNUM rn , P.* from 
+					(select e.IDNUMBER , e.EMAIL , e.NAME , e.NICKNAME , e.PHONENUMBER , e.GENDER , e.CHECKSNSID , b.GRADE , e.ENABLED ,  b.REGISTRATIONDATE , b.LASTDATE , e.AUTHORITY    
+						from (select  m.IDNUMBER , m.EMAIL , m.NAME , m.NICKNAME , m.PHONENUMBER , m.GENDER , m.CHECKSNSID , m.ENABLED ,  a.AUTHORITY from AUTHORITIES a , MEMBER m where a.email = m.email) e , 
+							(select r.email , r.GRADE , d.REGISTRATIONDATE , d.LASTDATE from GRADE  r , MEMBERDATEMANAGEMENT d where r.email = d.email) b 
+								where  	
+								<choose>
+									<when test="sqlcatgo == null || sqlkeyword == null">
+												e.email = b.email 
+									</when>
+									<when test="sqlkeyword != null ">
+										${sqlcatgo} LIKE '%' || #{sqlkeyword} || '%'  and	e.email = b.email
+									</when>
+								</choose> 
+									ORDER BY 
+								<choose>
+									<when test="columnOrderBy == 'gender'.toString()">
+										e.${columnOrderBy} desc 
+									</when>
+									<when  test="columnOrderBy == 'idNumber'.toString()">
+										e.${columnOrderBy} desc 
+									</when>
+									<when  test="columnOrderBy == 'email'.toString()">
+										e.${columnOrderBy} desc 
+									</when>
+									<when  test="columnOrderBy == 'nickName'.toString()">
+										e.${columnOrderBy} desc 
+									</when>
+									<when  test="columnOrderBy == 'name'.toString()">
+										e.${columnOrderBy} desc 
+									</when>
+									<when  test="columnOrderBy == 'checkSnsId'.toString()">
+										e.${columnOrderBy} desc 
+									</when>
+									<when  test="columnOrderBy == 'enabled'.toString()">
+										e.${columnOrderBy} desc 
+									</when>
+									<when  test="columnOrderBy == 'grade'.toString()"> 
+										b.${columnOrderBy} desc 
+									</when>
+									<when  test="columnOrderBy == 'AUTHORITY'.toString()">  
+										e.${columnOrderBy} desc 
+									</when>
+									<when  test="columnOrderBy == 'LASTDATE'.toString()">  
+										b.${columnOrderBy} desc 
+									</when>
+									<when  test="columnOrderBy == 'REGISTRATIONDATE'.toString()">  
+										b.${columnOrderBy} desc 
+									</when>
+									<when  test="columnOrderBy == 'phoneNumber'.toString()">  
+										e.${columnOrderBy} desc 
+									</when>
+								</choose> 
+									) P ) WHERE rn BETWEEN #{start} AND #{end}
+	</select>
+	
+	<select id="countMember" parameterType="PagingKeyword" resultType="Integer">
+		SELECT COUNT(*) FROM 
+			(select e.IDNUMBER , e.EMAIL , e.NAME , e.NICKNAME , e.PHONENUMBER , e.GENDER , e.CHECKSNSID , b.GRADE , e.ENABLED , b.REGISTRATIONDATE , b.LASTDATE , e.AUTHORITY   
+				 from (select  m.IDNUMBER , m.EMAIL , m.NAME , m.NICKNAME , m.PHONENUMBER , m.GENDER , m.CHECKSNSID , m.ENABLED ,  a.AUTHORITY from AUTHORITIES a , MEMBER m where a.email = m.email) e , 
+				 	(select r.email , r.GRADE , d.REGISTRATIONDATE , d.LASTDATE from GRADE  r , MEMBERDATEMANAGEMENT d where r.email = d.email) b 
+						where e.email = b.email 
+						<choose>
+								<when test="keyword == null">
+										
+								</when>
+								<when test="keyword != null">
+										and ${catgo} LIKE '%' || #{keyword} || '%'
+								</when>
+							</choose>
+							) 
+							
+	</select>
+		
+	
+	
+	<update id="adminAuthorization"	parameterType="Long">
+		update authorities set AUTHORITY = 'ROLE_ADMIN' where idNumber = #{idNumber}
+	</update>
+	
+	<update id="adminDeauthorization"	parameterType="Long" >
+		update authorities set AUTHORITY = 'ROLE_USER' where idNumber = #{idNumber}
+	</update>	
+		
+	<update id="updateLastDate"  parameterType="String" >
+		update MEMBERDATEMANAGEMENT set lastDate = SYSDATE where email = #{userEmail}
+	</update>
+	
+
+	<update id="memberInfoChange"  parameterType="AdminMemberInfoChange" >
+		<!--  update (select g.grade , m.nickName , m.phoneNumber , m.email , m.name from Member m , Grade g where m.email = g.email) set grade=#{grade} , nickname=#{nickName} , phoneNumber = #{phoneNumber} , name = #{name} where email = #{email}-->
+		update member set nickname = #{nickName} , phoneNumber = #{phoneNumber} , name = #{name} where email = #{email}  
+	</update>
+	
+	<update id="memberInfoChangeGrade"  parameterType="AdminMemberInfoChange" >
+		<!--  update (select g.grade , m.nickName , m.phoneNumber , m.email , m.name from Member m , Grade g where m.email = g.email) set grade=#{grade} , nickname=#{nickName} , phoneNumber = #{phoneNumber} , name = #{name} where email = #{email}-->
+		update grade set grade=#{grade} where email = #{email}  
+	</update>
+	
+	
+	<select id="memberInfofind" parameterType="String" resultType="AdminUserInfo" >
+			 select * from 
+					(select e.IDNUMBER , e.EMAIL , e.NAME , e.NICKNAME , e.PHONENUMBER , e.GENDER , e.CHECKSNSID , b.GRADE , e.ENABLED ,  b.REGISTRATIONDATE , b.LASTDATE , e.AUTHORITY    
+						from (select  m.IDNUMBER , m.EMAIL , m.NAME , m.NICKNAME , m.PHONENUMBER , m.GENDER , m.CHECKSNSID , m.ENABLED ,  a.AUTHORITY from AUTHORITIES a , MEMBER m where a.email = m.email) e , 
+							(select r.email , r.GRADE , d.REGISTRATIONDATE , d.LASTDATE from GRADE  r , MEMBERDATEMANAGEMENT d where r.email = d.email) b 
+								where  e.email = b.email ) where email = #{email}			
+	</select>
+	
+	
+	<select id="findNickNameDuplication"  parameterType="String" resultType="String">
+		select nickName from member where nickName = #{nickName}
+	</select>
+	
+	<insert id="insertTodoList" parameterType="TodoList" >
+		insert into TODOLIST values ( TODOLIST_SEQ.nextval, #{email} , #{startDate} , #{endDate} , #{content} , #{publicCheck})
+	</insert>
+	
+	
+	<select id="adminCalenderSelect" resultType="TodoList">
+		select * from TODOLIST order by startDate desc
+	</select>
+		
+	<delete id="deleteTodoList" parameterType="Integer">
+		delete from TODOLIST where todoListNum = #{deleteTodoListNumber}
+	</delete>
+	
+	
+	
+</mapper>
